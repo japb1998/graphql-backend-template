@@ -15,6 +15,12 @@ const userResolvers = {
   },
   Mutation: {
     login: async (parent, { username, password }, context, info) => {
+
+    const {errors, valid} = validateLogin(username, password); 
+       
+    if(!valid){
+        throw new UserInputError("Errors",{errors})
+}; 
       let user  = await User.findOne({username: username});
       //check if user exist
       if (!user) {
@@ -34,18 +40,19 @@ const userResolvers = {
     },
     createUser: async (_, { userInput:{ username, password, confirmPassword, email, name } }) => {
     
- 
+        const {errors, valid} = validateInput(username, password, confirmPassword, email, name);
+
+        if(!valid){
+                throw new UserInputError("Errors",{errors})
+        }; 
+
       const existingUser = await User.findOne({username:username});
     //   console.log(existingUser)
       if(existingUser){
           throw new UserInputError("Username already in use")
       }
 
-const {errors, valid} = validateInput(username, password, confirmPassword, email, name);
 
-if(!valid){
-        throw new UserInputError("Errors",{errors})
-}
 
 password = await bcrypt.hash(password, 10);
 

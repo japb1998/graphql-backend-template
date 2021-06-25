@@ -26,11 +26,11 @@ module.exports = {
         }
 
     },
-    validateLogin:(user)=>{
-        if (user.username.trim() === "") {
+    validateLogin:(username,password)=>{
+        if (username.trim() === "") {
             errors.username = "username must not be empty"
         }
-        if (user.password.trim() === "") {
+        if (password.trim() === "") {
             errors.password = "password must not be empty"
         }
     }
