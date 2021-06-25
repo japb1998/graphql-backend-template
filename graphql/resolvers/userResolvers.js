@@ -1,6 +1,7 @@
 const { UserInputError } = require("apollo-server");
 const { User } = require('../../models/User');
 const { generateToken } = require("../../utils/auth");
+const {validateInput , validateLogin}=require('../../utils/inputValidation');
 const bcrypt = require('bcrypt');
 
 
@@ -14,35 +15,57 @@ const userResolvers = {
   },
   Mutation: {
     login: async (parent, { username, password }, context, info) => {
-      let user  = await User.find({username: username});
+      let user  = await User.findOne({username: username});
       //check if user exist
       if (!user) {
         throw new UserInputError("Invalid Credentials value");
       }
-      const token = generateToken(userInput);
+
+      const match = await bcrypt.compare(password, user.password);
+      if(!match) throw new UserInputError("Invalid Credentials value");
+
+      const token = generateToken(user);
       const res = {
         username,
-        email: userInput.email,
+        email: user.email,
         token: token,
       };
       return res;
     },
-    createUser: async (_, { user }) => {
-      const { username, password, corfirmPassword, email, name } = user;
+    createUser: async (_, { userInput:{ username, password, confirmPassword, email, name } }) => {
+    
  
-      const user = await User.find({username:username});
-      if(user){
-          throw new UserInputError("Usersname already in user")
+      const existingUser = await User.findOne({username:username});
+    //   console.log(existingUser)
+      if(existingUser){
+          throw new UserInputError("Username already in use")
       }
 
-      const token = generateToken(user);
+const {errors, valid} = validateInput(username, password, confirmPassword, email, name);
+
+if(!valid){
+        throw new UserInputError("Errors",{errors})
+}
+
+password = await bcrypt.hash(password, 10);
+
+const newUser =  new User({
+    email, 
+    username,
+    password,
+    name
+});
+
+const res = await newUser.save();
+
+
+      const token = generateToken(newUser);
     
-      const res = {
-        username,
-        email,
-        token: token,
-      };
-            return res;
+            return {
+                email:res.email,
+                username:res.username,
+                token
+            }
     },
   },
 };

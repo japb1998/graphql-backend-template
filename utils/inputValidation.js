@@ -1,19 +1,22 @@
 module.exports = {
-    validateInput: (user) => {
+    validateInput: (username, password, confirmPassword, email, name) => {
         const errors = {}
-        if (user.username.trim() === "") {
+        if (username.trim() === "") {
             errors.username = "username must not be empty"
         }
-        if (user.name.trim() === "") {
+        if (name.trim() === "") {
             errors.username = "username must not be empty"
         }
-        if (user.password.trim() === "") {
+        if (password.trim() === "") {
             errors.password = "password must not be empty"
         }
-        if (user.confirmPassword.trim() === "") {
+        if (confirmPassword.trim() === "") {
             errors.confirmPassword = "confirmPassword must not be empty"
         }
-        if (user.email.trim() === "") {
+        if (confirmPassword !== password) {
+            errors.confirmPassword = "passwords must match"
+        }
+        if (email.trim() === "") {
             errors.email = "email must not be empty"
         }
 
@@ -22,6 +25,14 @@ module.exports = {
             valid: Object.keys(errors).length < 1
         }
 
+    },
+    validateLogin:(user)=>{
+        if (user.username.trim() === "") {
+            errors.username = "username must not be empty"
+        }
+        if (user.password.trim() === "") {
+            errors.password = "password must not be empty"
+        }
     }
 
 }
