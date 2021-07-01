@@ -1,8 +1,10 @@
 const { ApolloServer } = require('apollo-server');
+require("dotenv").config();
 const mongoose = require('mongoose');
 const {typeDefs} = require('./graphql/typeDefs');
 const {resolvers} = require('./graphql/resolvers');
 const PORT = process.env.PORT || 3000;
+let DB_URL = process.env.DB_URL;
 
 
 const server = new ApolloServer({
@@ -20,7 +22,7 @@ const server = new ApolloServer({
   // },
 });
 
-mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true}).then(()=>{
+mongoose.connect(DB_URL, {useNewUrlParser: true}).then(()=>{
   server.listen({port:PORT}).then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
   });

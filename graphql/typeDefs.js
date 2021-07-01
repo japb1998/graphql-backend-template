@@ -7,6 +7,7 @@ type User {
     username:String!
     email:String!
     password:String!
+    registeredAt:String!
 },
 type Token{
     username:String!
@@ -26,7 +27,9 @@ type Query {
 type Mutation{
     login(username:String!, password:String!):Token
     createUser(userInput:userRegistrationInput):Token
-}
+    requestPasswordReset(email:String!):String!
+    resetPassword(userId:ID!, token:ID!, password:String!):Boolean!
+},
 `
 
 

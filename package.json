@@ -12,8 +12,11 @@
   "dependencies": {
     "apollo-server": "^2.25.1",
     "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
     "graphql": "^15.5.0",
+    "handlebars": "^4.7.7",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.14"
+    "mongoose": "^5.12.14",
+    "nodemailer": "^6.6.2"
   }
 }

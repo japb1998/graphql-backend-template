@@ -27,11 +27,16 @@ module.exports = {
 
     },
     validateLogin:(username,password)=>{
+        let errors = {}
         if (username.trim() === "") {
             errors.username = "username must not be empty"
         }
         if (password.trim() === "") {
             errors.password = "password must not be empty"
+        }
+        return {
+            errors,
+            valid:Object.keys(errors).length < 1
         }
     }
 
